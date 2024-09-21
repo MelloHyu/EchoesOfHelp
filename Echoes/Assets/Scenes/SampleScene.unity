@@ -779,7 +779,7 @@ MonoBehaviour:
   chaseSequenceBegan: 0
   detector: {fileID: 1134652730}
   loudnessSensibility: 100
-  chaseThreshold: 15
+  chaseThreshold: 11
   audioTimerLimit: 15
 --- !u!4 &693959108
 Transform:
