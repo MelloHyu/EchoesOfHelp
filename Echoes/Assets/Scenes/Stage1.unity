@@ -222814,6 +222814,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5560651957711602302, guid: cf3103a5b8d4ff64dbd5b7d694e9035c, type: 3}
+      propertyPath: m_Radius
+      value: 0.57645035
+      objectReference: {fileID: 0}
+    - target: {fileID: 5560651957711602302, guid: cf3103a5b8d4ff64dbd5b7d694e9035c, type: 3}
+      propertyPath: m_Offset.y
+      value: -0.07645035
+      objectReference: {fileID: 0}
     - target: {fileID: 7283452053616185298, guid: cf3103a5b8d4ff64dbd5b7d694e9035c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
