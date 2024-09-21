@@ -4,15 +4,35 @@ using UnityEngine;
 
 public class DynamiteCountHolder : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public int dynamiteKeys = 0;
+    public static DynamiteCountHolder Instance
     {
+        get;
+        private set;
+    }
+
+    private void Awake()
+    {
+        if(Instance == null)
+        {
+            Instance = this;
+        }
+    }
+
+    public void IncreaseKeyByOne()
+    {
+        dynamiteKeys += 1;
+    }
+
+    public void DecreaseKeyByOne()
+    {
+        if(dynamiteKeys>0)
+        {
+            dynamiteKeys -= 1;
+        }
         
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
+
 }
