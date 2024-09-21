@@ -5,7 +5,7 @@ using UnityEngine;
 public class Echolocation : MonoBehaviour
 {
    [SerializeField] private AudioLoudnessDetection detector;
-    [SerializeField] private Vector2 minScale;
+    [SerializeField] private float minScale = 0.4f;
     [SerializeField] private Vector2 maxScale;
     [SerializeField] private float loudnessSensibility = 100f;
     [SerializeField] private float audioThreshold = 0.1f;
@@ -38,7 +38,7 @@ public class Echolocation : MonoBehaviour
 
     private void UpscaleRadiusOfEcho(float loudness)
     {
-        float range = map(loudness, 0, maxLoudness, 0.3f, 1);
+        float range = map(loudness, 0, maxLoudness, minScale, 1);
         float sc = curve.Evaluate(range);
         
         transform.localScale = (Vector2.one*sc*maxScale);
