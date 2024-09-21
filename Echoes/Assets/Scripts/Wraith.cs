@@ -13,13 +13,14 @@ public class Wraith : MonoBehaviour
     private Vector2 moveDirection;
     [SerializeField] private bool chaseSequenceBegan = false;
 
-
+    [SerializeField] private Animator anim;
     [SerializeField] private AudioLoudnessDetection detector;
     [SerializeField] private float loudnessSensibility = 100f;
     [SerializeField] private float chaseThreshold = 0.1f;
     [SerializeField] private float audioTimerLimit = 2f;
     private float timer = 0f;
-
+    private Vector2 lastDir;
+    private bool isRunning;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -66,7 +67,15 @@ public class Wraith : MonoBehaviour
         if(target && chaseSequenceBegan)
         {
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
+            if(moveDirection.sqrMagnitude>0)
+            {
+                lastDir = moveDirection;
+            }
+            isRunning = rb.velocity.sqrMagnitude > 0;
+
         }
+
+        Animate();
     }
     private bool HasTriggeredChaseThreshold(float loudness)
     {
@@ -96,6 +105,13 @@ public class Wraith : MonoBehaviour
             return true;
         }
         else return false;
+    }
+
+    private void Animate()
+    {
+        anim.SetFloat("AnimX", moveDirection.x);
+        anim.SetFloat("AnimY", moveDirection.y);
+        anim.SetBool("IsRunning", isRunning);
     }
 
 }
