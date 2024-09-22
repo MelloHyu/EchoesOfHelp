@@ -13,6 +13,11 @@ public class Crate : MonoBehaviour
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
 
+    private void LateUpdate()
+    {
+        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))

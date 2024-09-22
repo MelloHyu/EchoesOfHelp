@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class DynamiteCountHolder : MonoBehaviour
 {
     public int dynamiteKeys = 0;
@@ -31,6 +31,13 @@ public class DynamiteCountHolder : MonoBehaviour
             dynamiteKeys -= 1;
         }
         
+    }
+
+    public void RestartLevel()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        int sceneIndex = currentScene.buildIndex;
+        SceneManager.LoadScene(sceneIndex);
     }
 
 

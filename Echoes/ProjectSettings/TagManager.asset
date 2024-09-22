@@ -51,9 +51,9 @@ TagManager:
   - name: Foreground
     uniqueID: 645616315
     locked: 0
-  - name: NoCollider
-    uniqueID: 2719075369
-    locked: 0
   - name: Player
     uniqueID: 2284595701
+    locked: 0
+  - name: NoCollider
+    uniqueID: 2719075369
     locked: 0

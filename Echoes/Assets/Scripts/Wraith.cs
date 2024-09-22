@@ -6,11 +6,12 @@ using System;
 public class Wraith : MonoBehaviour
 {
     public event EventHandler OnTriggeredWraith;
-
+    [SerializeField] private Transform distFromPlayer;
     [SerializeField] private float moveSpeed = 2f;
     private Rigidbody2D rb;
     [SerializeField] private Transform target;
     private Vector2 moveDirection;
+    private Vector2 idlePosition;
     [SerializeField] private bool chaseSequenceBegan = false;
 
     [SerializeField] private Animator anim;
@@ -46,7 +47,7 @@ public class Wraith : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(chaseTimer);
+        //Debug.Log(chaseTimer);
         if(target && chaseSequenceBegan && chaseTimer<=maxChaseTimer)
         {
             Vector2 dir = (target.position - transform.position).normalized;
@@ -60,6 +61,12 @@ public class Wraith : MonoBehaviour
             chaseTimer = 0f;
         }
 
+        if(!chaseSequenceBegan)
+        {
+            Vector2 Idledir = (distFromPlayer.position - transform.position).normalized;
+            idlePosition = Idledir;
+        }
+
         float loudness = detector.GetLoudnessFromMicrophone() * loudnessSensibility;
 
         if (IsAboveLoudnessThreshold(loudness))
@@ -71,7 +78,7 @@ public class Wraith : MonoBehaviour
         {
             OnTriggeredWraith?.Invoke(this, EventArgs.Empty);
         }
-        //Debug.Log(timer);
+        Debug.Log(timer);
     }
 
     private void FixedUpdate()
@@ -85,6 +92,11 @@ public class Wraith : MonoBehaviour
             }
             isRunning = rb.velocity.sqrMagnitude > 0;
 
+        }
+        else
+        {
+            rb.velocity = new Vector2(idlePosition.x, idlePosition.y) * moveSpeed;
+            isRunning = rb.velocity.sqrMagnitude > 0;
         }
 
         Animate();
@@ -124,6 +136,15 @@ public class Wraith : MonoBehaviour
         anim.SetFloat("AnimX", moveDirection.x);
         anim.SetFloat("AnimY", moveDirection.y);
         anim.SetBool("IsRunning", isRunning);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            DynamiteCountHolder.Instance.RestartLevel();
+        }
+
     }
 
 }
