@@ -5,6 +5,7 @@ using System;
 
 public class Wraith : MonoBehaviour
 {
+    [SerializeField] private AudioSource scream;
     public event EventHandler OnTriggeredWraith;
     [SerializeField] private Transform distFromPlayer;
     [SerializeField] private float moveSpeed = 2f;
@@ -41,8 +42,10 @@ public class Wraith : MonoBehaviour
     private void Wraith_OnTriggeredWraith(object sender, EventArgs e)
     {
         chaseTimer = 0f;
+        scream.Play();
         Debug.Log("Wraith has started chasing");
         chaseSequenceBegan = true;
+
     }
 
     private void Update()

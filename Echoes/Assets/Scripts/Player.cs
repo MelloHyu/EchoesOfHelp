@@ -10,10 +10,19 @@ public class Player : MonoBehaviour
     [SerializeField] private float movementSpeed = 10f;
     private Vector2 lastDir;
     private bool isRunning = false;
+    [SerializeField] private AudioSource footsteps;
     private void Awake()
     {
         playerInputActions = new PlayerInputActions();
         playerRB = GetComponent<Rigidbody2D>();
+    }
+
+    private void Update()
+    {
+        if(isRunning)
+        {
+            PlayFootsteps();
+        }
     }
     private void OnEnable()
     {
@@ -41,6 +50,11 @@ public class Player : MonoBehaviour
         anim.SetFloat("AnimMoveX", lastDir.x);
         anim.SetFloat("AnimMoveY", lastDir.y);
         anim.SetBool("IsRunning", isRunning);
+    }
+
+    private void PlayFootsteps()
+    {
+        footsteps.Play();
     }
 
 }
