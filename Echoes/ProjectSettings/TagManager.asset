@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Box
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - Echo
   - Player
   - Decoration
-  - 
+  - Box
   - 
   - 
   - 
@@ -47,12 +48,12 @@ TagManager:
   - name: GameObjects
     uniqueID: 1906356415
     locked: 0
-  - name: Player
-    uniqueID: 2284595701
-    locked: 0
   - name: Foreground
     uniqueID: 645616315
     locked: 0
   - name: NoCollider
     uniqueID: 2719075369
+    locked: 0
+  - name: Player
+    uniqueID: 2284595701
     locked: 0

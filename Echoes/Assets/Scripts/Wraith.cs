@@ -18,6 +18,8 @@ public class Wraith : MonoBehaviour
     [SerializeField] private float loudnessSensibility = 100f;
     [SerializeField] private float chaseThreshold = 0.1f;
     [SerializeField] private float audioTimerLimit = 2f;
+    [SerializeField] private float maxChaseTimer = 20f;
+    private float chaseTimer = 0f;
     private float timer = 0f;
     private Vector2 lastDir;
     private bool isRunning;
@@ -30,22 +32,32 @@ public class Wraith : MonoBehaviour
     {
         OnTriggeredWraith += Wraith_OnTriggeredWraith;
         timer = 0f;
+        chaseTimer = 0f;
         chaseSequenceBegan = false;
 
     }
 
     private void Wraith_OnTriggeredWraith(object sender, EventArgs e)
     {
+        chaseTimer = 0f;
         Debug.Log("Wraith has started chasing");
         chaseSequenceBegan = true;
     }
 
     private void Update()
     {
-        if(target && chaseSequenceBegan)
+        Debug.Log(chaseTimer);
+        if(target && chaseSequenceBegan && chaseTimer<=maxChaseTimer)
         {
             Vector2 dir = (target.position - transform.position).normalized;
             moveDirection = dir;
+            chaseTimer += Time.deltaTime;
+        }
+
+        if(maxChaseTimer <= chaseTimer)
+        {
+            chaseSequenceBegan = false;
+            chaseTimer = 0f;
         }
 
         float loudness = detector.GetLoudnessFromMicrophone() * loudnessSensibility;
@@ -59,7 +71,7 @@ public class Wraith : MonoBehaviour
         {
             OnTriggeredWraith?.Invoke(this, EventArgs.Empty);
         }
-        Debug.Log(timer);
+        //Debug.Log(timer);
     }
 
     private void FixedUpdate()
