@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public class DynamiteCountHolder : MonoBehaviour
+public class GameManager : MonoBehaviour
 {
     public int dynamiteKeys = 0;
-    public static DynamiteCountHolder Instance
+    public static GameManager Instance
     {
         get;
         private set;

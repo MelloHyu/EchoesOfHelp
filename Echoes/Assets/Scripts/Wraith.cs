@@ -5,25 +5,26 @@ using System;
 
 public class Wraith : MonoBehaviour
 {
-    [SerializeField] private AudioSource scream;
-    public event EventHandler OnTriggeredWraith;
+
+    [SerializeField] private AudioSource ghostIncomingScream;
     [SerializeField] private Transform distFromPlayer;
     [SerializeField] private float moveSpeed = 2f;
-    private Rigidbody2D rb;
     [SerializeField] private Transform target;
-    private Vector2 moveDirection;
-    private Vector2 idlePosition;
     [SerializeField] private bool chaseSequenceBegan = false;
-
     [SerializeField] private Animator anim;
     [SerializeField] private AudioLoudnessDetection detector;
     [SerializeField] private float loudnessSensibility = 100f;
     [SerializeField] private float chaseThreshold = 0.1f;
     [SerializeField] private float audioTimerLimit = 2f;
     [SerializeField] private float maxChaseTimer = 20f;
-    private float chaseTimer = 0f;
-    private float timer = 0f;
-    private Vector2 lastDir;
+
+
+    private Rigidbody2D rb;
+    private Vector2 moveDirection;
+    private Vector2 idlePosition;
+    private float chaseTimerCountdown = 0f;
+    private float beginChaseTimerCountdown = 0f;
+    private Vector2 animationLastIdleDirection;
     private bool isRunning;
     private void Awake()
     {
@@ -32,36 +33,34 @@ public class Wraith : MonoBehaviour
 
     private void Start()
     {
-        OnTriggeredWraith += Wraith_OnTriggeredWraith;
-        timer = 0f;
-        chaseTimer = 0f;
+        
+        beginChaseTimerCountdown = 0f;
+        chaseTimerCountdown = 0f;
         chaseSequenceBegan = false;
 
     }
 
-    private void Wraith_OnTriggeredWraith(object sender, EventArgs e)
+    private void WraithTrigger()
     {
-        chaseTimer = 0f;
-        scream.Play();
+        chaseTimerCountdown = 0f;
+        
         Debug.Log("Wraith has started chasing");
         chaseSequenceBegan = true;
-
     }
 
     private void Update()
     {
         //Debug.Log(chaseTimer);
-        if(target && chaseSequenceBegan && chaseTimer<=maxChaseTimer)
+        if(target && chaseSequenceBegan && chaseTimerCountdown<=maxChaseTimer)
         {
-            Vector2 dir = (target.position - transform.position).normalized;
-            moveDirection = dir;
-            chaseTimer += Time.deltaTime;
+            
+            ChasePlayer();
         }
 
-        if(maxChaseTimer <= chaseTimer)
+        if(maxChaseTimer <= chaseTimerCountdown)
         {
             chaseSequenceBegan = false;
-            chaseTimer = 0f;
+            chaseTimerCountdown = 0f;
         }
 
         if(!chaseSequenceBegan)
@@ -74,24 +73,26 @@ public class Wraith : MonoBehaviour
 
         if (IsAboveLoudnessThreshold(loudness))
         {
-            timer += Time.deltaTime;
+            beginChaseTimerCountdown += Time.deltaTime;
         }
         
         if (HasTriggeredChaseThreshold(loudness))
         {
-            OnTriggeredWraith?.Invoke(this, EventArgs.Empty);
+            ghostIncomingScream.Play();
+            WraithTrigger();
         }
-        Debug.Log(timer);
+        Debug.Log(beginChaseTimerCountdown);
     }
 
     private void FixedUpdate()
     {
         if(target && chaseSequenceBegan)
         {
+           
             rb.velocity = new Vector2(moveDirection.x, moveDirection.y) * moveSpeed;
             if(moveDirection.sqrMagnitude>0)
             {
-                lastDir = moveDirection;
+                animationLastIdleDirection = moveDirection;
             }
             isRunning = rb.velocity.sqrMagnitude > 0;
 
@@ -101,14 +102,14 @@ public class Wraith : MonoBehaviour
             rb.velocity = new Vector2(idlePosition.x, idlePosition.y) * moveSpeed;
             isRunning = rb.velocity.sqrMagnitude > 0;
         }
-
+       
         Animate();
     }
     private bool HasTriggeredChaseThreshold(float loudness)
     {
         if (IsAboveLoudnessThreshold(loudness) && HasReachedTimeLimit())
         {
-            timer = 0f;
+            beginChaseTimerCountdown = 0f;
             return true;
         }
 
@@ -117,9 +118,9 @@ public class Wraith : MonoBehaviour
 
     private bool HasReachedTimeLimit()
     {
-        if (timer >= audioTimerLimit)
+        if (beginChaseTimerCountdown >= audioTimerLimit)
         {
-            timer = 0f;
+            beginChaseTimerCountdown = 0f;
             return true;
         }
         else return false;
@@ -136,8 +137,8 @@ public class Wraith : MonoBehaviour
 
     private void Animate()
     {
-        anim.SetFloat("AnimX", moveDirection.x);
-        anim.SetFloat("AnimY", moveDirection.y);
+        anim.SetFloat("AnimX", animationLastIdleDirection.x);
+        anim.SetFloat("AnimY", animationLastIdleDirection.y);
         anim.SetBool("IsRunning", isRunning);
     }
 
@@ -145,9 +146,17 @@ public class Wraith : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Player"))
         {
-            DynamiteCountHolder.Instance.RestartLevel();
+            GameManager.Instance.RestartLevel();
         }
 
+    }
+
+    private void ChasePlayer()
+    {
+
+        Vector2 dir = (target.position - transform.position).normalized;
+        moveDirection = dir;
+        chaseTimerCountdown += Time.deltaTime;
     }
 
 }

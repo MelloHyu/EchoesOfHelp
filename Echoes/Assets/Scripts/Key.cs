@@ -10,7 +10,7 @@ public class Key : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            DynamiteCountHolder.Instance.IncreaseKeyByOne();
+            GameManager.Instance.IncreaseKeyByOne();
             Destroy(this.gameObject);
         }
     }

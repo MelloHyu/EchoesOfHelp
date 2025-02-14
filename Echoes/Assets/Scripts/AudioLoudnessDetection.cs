@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class AudioLoudnessDetection : MonoBehaviour
 {
+    public static AudioLoudnessDetection Instance
+    {
+        get;
+        private set;
+    }
+
     [SerializeField] private int sampleWindow = 64;
     private AudioClip microphoneClip;
 

@@ -8,9 +8,9 @@ public class Door : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(collision.CompareTag("Player") && DynamiteCountHolder.Instance.dynamiteKeys > 0)
+        if(collision.CompareTag("Player") && GameManager.Instance.dynamiteKeys > 0)
         {
-            DynamiteCountHolder.Instance.DecreaseKeyByOne();
+            GameManager.Instance.DecreaseKeyByOne();
             Destroy(this.gameObject);
         }
     }
